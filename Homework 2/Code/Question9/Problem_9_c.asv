@@ -1,0 +1,58 @@
+clc
+clear all
+m = 50;
+for i = 1:5
+    %Creating random U,Sigma and V
+    [U,] = qr(randn(m));
+    [V,] = qr(randn(m));
+    S=diag(flipud(sort(rand(m,1).^6)));
+    %Calculating the matrix
+    A = U*S*V';
+    %Calculating the SVD of A
+    [U2,S2,V2]= svd(A);
+   %changing sign column by column
+    for j=1:m
+        if U2(:,j)'*U(:,j) < 0 
+            U2(:,j) = -U2(:,j); 
+            V2(:,j) = -V2(:,j);
+        end
+    end
+    %Calculating the norm of differences
+    diffU(i) = norm(U-U2);
+    diffV(i) = norm(V-V2);
+    diffS(i) = norm(S-S2);
+    A2=(U2*S2*V2');
+    diffA(i) = norm(A-A2);
+    con1(i) = cond(A);
+    con2(i) = cond(A2);
+    
+end
+
+DiffU = NormU_U2'
+DiffV = NormV_V2'
+DiffS = NormS_S2'
+DiffA = NormA_newA'
+ConditionA = con'
+
+title('Combine Plots')
+
+
+hold on
+set(gca, 'YScale', 'log')
+set(gca, 'XScale', 'log') 
+xlabel('Condition No of A')
+ylabel('UError, VError, SigmaError, NormofA')
+scatter(con,NormU_U2)
+scatter(con,NormV_V2)
+scatter(con,NormS_S2)
+scatter(con,NormA_newA)
+
+legend('U Eror', 'V Error', 'Sigma Error', 'Norm of A')
+
+hold off
+
+
+
+
+
+
